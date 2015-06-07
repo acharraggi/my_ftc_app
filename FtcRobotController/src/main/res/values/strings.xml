@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="app_name">FTC Robot Controller</string>
+  <string name="app_name">3491 Robot Controller</string>
   <string name="ok">OK</string>
 
   <!-- Wifi Channel Selector -->
