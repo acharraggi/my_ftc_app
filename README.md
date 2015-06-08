@@ -1,4 +1,21 @@
 # ftc_app
+## 3491 FTC app
+A test app to experiment on the ZTE Speed phones while we wait for the rest of the new hardware.
+
+Changes:
+- rename the app
+- create a HelloOp
+- comment out the registering of all Op Modes that require the new hardware.
+
+I've configured Git for this repository in a fashion similar to: http://blog.powma.com/git-you-some-mean-js-setup-advanced-git/
+
+Hopefully I can mess around here, yet still retain the ability to merge new updates from ftctechnh and even submit pull requests if needed.
+
+Forked from https://github.com/ftctechnh/ftc_app.
+My copy of the fork at https://github.com/acharraggi/ftc_app
+
+---
+
 FTC Android Studio project to create FTC Robot Controller app.
 
 This is the FTC SDK that can be used to create an FTC Robot Controller app, with custom op modes.
