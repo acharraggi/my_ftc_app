@@ -21,13 +21,13 @@ public class OrientOp extends OpMode implements SensorEventListener {
     Sensor accelerometer;
     Sensor magnetometer;
 
-    private float azimut = 0.0f;
-    private float pitch = 0.0f;
-    private float roll = 0.0f;
+    // orientation values
+    private float azimut = 0.0f;       // value in radians
+    private float pitch = 0.0f;        // value in radians
+    private float roll = 0.0f;         // value in radians
 
-    private float[] mGravity;
-    private float[] mGeomagnetic;
-    private float[] mOrientation;
+    private float[] mGravity;       // latest sensor values
+    private float[] mGeomagnetic;   // latest sensor values
 
     /*
     * Constructor
@@ -44,10 +44,13 @@ public class OrientOp extends OpMode implements SensorEventListener {
     public void start() {
         startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 
+        // needed FtcConfig to get context for getSystemService
+        // but this required change to FtcRobotControllerActivity to set the context for us
         mSensorManager = (SensorManager) FtcConfig.context.getSystemService(Context.SENSOR_SERVICE);
-        // Log.d("OrientOp","just called getSystemService");
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        // delay value is SENSOR_DELAY_UI which is ok for telemetry, maybe not for actual robot use
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
 
@@ -72,7 +75,7 @@ public class OrientOp extends OpMode implements SensorEventListener {
         }
         telemetry.addData("4 azimut", "azimut = "+Math.round(Math.toDegrees(azimut)));
         telemetry.addData("5 pitch", "pitch = "+Math.round(Math.toDegrees(pitch)));
-        telemetry.addData("6 pitch", "roll = "+Math.round(Math.toDegrees(roll)));
+        telemetry.addData("6 roll", "roll = "+Math.round(Math.toDegrees(roll)));
     }
 
     /*
@@ -85,19 +88,19 @@ public class OrientOp extends OpMode implements SensorEventListener {
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        //Log.i("DisplayOrientation", "onAccuracyChanged called");
+        // not sure if needed, placeholder just in case
     }
 
-
     public void onSensorChanged(SensorEvent event) {
-        //Log.i("DisplayOrientation", "onSensorChanged called");
+        // we need both sensor values to calculate orientation
+        // only one value will have changed when this method called, we assume we can still use the other value.
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             mGravity = event.values;
         }
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             mGeomagnetic = event.values;
         }
-        if (mGravity != null && mGeomagnetic != null) {
+        if (mGravity != null && mGeomagnetic != null) {  //make sure we have both before calling getRotationMatrix
             float R[] = new float[9];
             float I[] = new float[9];
             boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);

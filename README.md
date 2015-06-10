@@ -6,6 +6,7 @@ Changes:
 - rename the app
 - create a HelloOp
 - comment out the registering of all Op Modes that require the new hardware.
+- create OrientOp that uses the phone's hardware sensors for device orientation.
 
 I've configured Git for this repository in a fashion similar to: http://blog.powma.com/git-you-some-mean-js-setup-advanced-git/
 
