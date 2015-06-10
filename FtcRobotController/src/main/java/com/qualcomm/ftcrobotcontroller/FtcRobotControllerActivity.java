@@ -149,6 +149,7 @@ public class FtcRobotControllerActivity extends Activity {
     setContentView(R.layout.activity_ftc_controller);
 
     context = this;
+    FtcConfig.context = this;     // save for use in Op modes
     utility = new Utility(this);
     entireScreenLayout = (LinearLayout) findViewById(R.id.entire_screen);
 
