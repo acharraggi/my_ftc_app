@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * An empty op mode serving as a template for custom OpModes
+ * A test op mode like NullOp that just displays Hello World!
  */
 public class HelloOp extends OpMode {
     private String startDate;

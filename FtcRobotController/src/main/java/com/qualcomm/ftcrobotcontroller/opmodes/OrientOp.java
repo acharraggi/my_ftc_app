@@ -13,7 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * An empty op mode serving as a template for custom OpModes
+ * An op mode that uses the geomagnetic and accelerometer values to calculate device
+ * orientation and return those values in telemetry.
  */
 public class OrientOp extends OpMode implements SensorEventListener {
     private String startDate;

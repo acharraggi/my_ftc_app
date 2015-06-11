@@ -13,21 +13,28 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * An op mode that returns the amblient light levels as telemetry
+ * An Op Mode that returns the raw Accelerometer sensor values as telemetry
  */
-public class LightOp extends OpMode implements SensorEventListener {
+public class AccelerometerOp extends OpMode implements SensorEventListener {
     private String startDate;
     private SensorManager mSensorManager;
-    Sensor light;
+    Sensor accelerometer;
 
-    private float lightLevel = 0.0f;       // Ambient light level in SI lux units
+    private float[] acceleration = {0.0f,0.0f,0.0f};    // SI units (m/s^2)
+    //values[0]: Acceleration minus Gx on the x-axis
+    //values[1]: Acceleration minus Gy on the y-axis
+    //values[2]: Acceleration minus Gz on the z-axis
 
-    private float[] mLight;       // latest sensor values
+    private float[] mAccelerometer;       // latest sensor values
+    // see http://developer.android.com/reference/android/hardware/SensorEvent.html#values
+    // for example that ends up compensating for gravity.
+    // Probably better to use TYPE_LINEAR_ACCELERATION instead, but maybe the raw values
+    // could be useful.
 
     /*
     * Constructor
     */
-    public LightOp() {
+    public AccelerometerOp() {
 
     }
 
@@ -42,10 +49,10 @@ public class LightOp extends OpMode implements SensorEventListener {
         // needed FtcConfig to get context for getSystemService
         // but this required change to FtcRobotControllerActivity to set the context for us
         mSensorManager = (SensorManager) FtcConfig.context.getSystemService(Context.SENSOR_SERVICE);
-        light = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         // delay value is SENSOR_DELAY_UI which is ok for telemetry, maybe not for actual robot use
-        mSensorManager.registerListener(this, light, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     /*
@@ -55,7 +62,10 @@ public class LightOp extends OpMode implements SensorEventListener {
     @Override
     public void loop() {
         telemetry.addData("1 Start", "LightOp started at " + startDate);
-        telemetry.addData("2 light", "Light Level = " + Math.round(lightLevel) + " SI lux");
+        telemetry.addData("2 units", "values in SI units (m/s^2)");
+        telemetry.addData("3 x-axis", "x-axis = " + acceleration[0]);
+        telemetry.addData("4 y-axis", "y-axis = " + acceleration[1]);
+        telemetry.addData("5 z-axis", "z-axis = " + acceleration[2]);
     }
 
     /*
@@ -72,13 +82,13 @@ public class LightOp extends OpMode implements SensorEventListener {
     }
 
     public void onSensorChanged(SensorEvent event) {
-        // we need both sensor values to calculate orientation
-        // only one value will have changed when this method called, we assume we can still use the other value.
-        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-            mLight = event.values;
-        }
-        if (mLight != null) {
-            lightLevel = mLight[0]; // only one value from this sensor
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            mAccelerometer = event.values;
+            if (mAccelerometer != null) {
+                acceleration[0] = mAccelerometer[0]; // Acceleration minus Gx on the x-axis
+                acceleration[1] = mAccelerometer[1]; // Acceleration minus Gy on the y-axis
+                acceleration[2] = mAccelerometer[2]; // Acceleration minus Gz on the z-axis
+            }
         }
     }
 }

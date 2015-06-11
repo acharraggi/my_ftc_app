@@ -59,6 +59,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("HelloOp", HelloOp.class);
     manager.register("OrientOp", OrientOp.class);
     manager.register("LightOp", LightOp.class);
+    manager.register("AccelerometerOp", AccelerometerOp.class);
     /*
     manager.register("K9TeleOp", K9TeleOp.class);
     manager.register("K9TankDrive", K9TankDrive.class);
