@@ -12,6 +12,7 @@ Changes:
 - create MagneticOp that returns raw magnetic field values as telemetry
 - create ProximityOp that returns raw proximity sensor values as telemetry
 - create LinearAccelerometerOp to return raw linear acceleration values, fix comments & cut/paste errors in my other OpModes
+- create RotationOp to return raw rotation vector sensor values
 
 I've configured Git for this repository in a fashion similar to: http://blog.powma.com/git-you-some-mean-js-setup-advanced-git/
 
