@@ -15,6 +15,9 @@ import java.util.Date;
 /**
  * An op mode that uses the geomagnetic and accelerometer values to calculate device
  * orientation and return those values in telemetry.
+ * It makes use of getRotationMatrix() and getOrientation(), but does not use
+ * remapCoordinateSystem() which one might want.
+ * see: http://developer.android.com/reference/android/hardware/SensorManager.html#remapCoordinateSystem(float[], int, int, float[])
  */
 public class OrientOp extends OpMode implements SensorEventListener {
     private String startDate;
@@ -23,7 +26,7 @@ public class OrientOp extends OpMode implements SensorEventListener {
     Sensor magnetometer;
 
     // orientation values
-    private float azimut = 0.0f;       // value in radians
+    private float azimuth = 0.0f;      // value in radians
     private float pitch = 0.0f;        // value in radians
     private float roll = 0.0f;         // value in radians
 
@@ -64,19 +67,12 @@ public class OrientOp extends OpMode implements SensorEventListener {
     @Override
     public void loop() {
         telemetry.addData("1 Start", "OrientOp started at " + startDate);
-        if (mGravity == null) {
-            telemetry.addData("2 Gravity", "Gravity sensor values null ");
-        } else {
-            telemetry.addData("2 Gravity", "Gravity sensor returning values " );
-        }
-        if (mGravity == null) {
-            telemetry.addData("3 Geomagnetic", "Geomagnetic sensor values null ");
-        } else {
-            telemetry.addData("3 Geomagnetic", "Geomagnetic sensor returning values " );
-        }
-        telemetry.addData("4 azimut", "azimut = "+Math.round(Math.toDegrees(azimut)));
-        telemetry.addData("5 pitch", "pitch = "+Math.round(Math.toDegrees(pitch)));
-        telemetry.addData("6 roll", "roll = "+Math.round(Math.toDegrees(roll)));
+        telemetry.addData("2 note1", "values below are in degrees" );
+        telemetry.addData("3 note2", "azimuth relates to magnetic north" );
+        telemetry.addData("4 note3", " " );
+        telemetry.addData("5 azimuth", "azimuth = "+Math.round(Math.toDegrees(azimuth)));
+        telemetry.addData("6 pitch", "pitch = "+Math.round(Math.toDegrees(pitch)));
+        telemetry.addData("7 roll", "roll = "+Math.round(Math.toDegrees(roll)));
     }
 
     /*
@@ -108,7 +104,7 @@ public class OrientOp extends OpMode implements SensorEventListener {
             if (success) {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
-                azimut = orientation[0]; // orientation contains: azimut, pitch and roll
+                azimuth = orientation[0]; // orientation contains: azimuth, pitch and roll
                 pitch = orientation[1];
                 roll = orientation[2];
             }

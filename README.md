@@ -3,16 +3,17 @@
 A test app to experiment on the ZTE Speed phones while we wait for the rest of the new hardware.
 
 Changes:
-- rename the app
-- create a HelloOp
-- comment out the registering of all Op Modes that require the new hardware.
-- create OrientOp that uses the phone's hardware sensors for device orientation.
-- create LightOp that uses the light sensor for ambient light levels
-- create AccelerometerOp to return raw acceleration values, fix comments in my other OpModes
-- create MagneticOp that returns raw magnetic field values as telemetry
-- create ProximityOp that returns raw proximity sensor values as telemetry
-- create LinearAccelerometerOp to return raw linear acceleration values, fix comments & cut/paste errors in my other OpModes
-- create RotationOp to return raw rotation vector sensor values
+v0.0.1 - change Google APIs to 19 from 21, and minsdk from 16 to 19
+v0.0.2 - rename the app
+v0.1 - create a HelloOp, comment out the registering of all Op Modes that require the new hardware.
+v0.2 - create OrientOp that uses the phone's hardware sensors for device orientation.
+v0.3 - create LightOp that uses the light sensor for ambient light levels
+v0.4 - create AccelerometerOp to return raw acceleration values, fix comments in my other OpModes
+v0.5 - create MagneticOp that returns raw magnetic field values as telemetry
+v0.6 - create ProximityOp that returns raw proximity sensor values as telemetry
+v0.7 - create LinearAccelerometerOp to return raw linear acceleration values, fix comments & cut/paste errors in my other OpModes
+v0.8 - create RotationOp to return raw rotation vector sensor values
+v0.9 - create GravityOp to return raw gravity_type sensor values, update comments and telemetry in OrientOp
 
 I've configured Git for this repository in a fashion similar to: http://blog.powma.com/git-you-some-mean-js-setup-advanced-git/
 
