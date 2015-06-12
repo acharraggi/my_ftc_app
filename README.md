@@ -9,6 +9,7 @@ Changes:
 - create OrientOp that uses the phone's hardware sensors for device orientation.
 - create LightOp that uses the light sensor for ambient light levels
 - create AccelerometerOp to return raw acceleration values, fix comments in my other OpModes
+- create MagneticOp that returns raw magnetic field values as telemetry
 
 I've configured Git for this repository in a fashion similar to: http://blog.powma.com/git-you-some-mean-js-setup-advanced-git/
 
