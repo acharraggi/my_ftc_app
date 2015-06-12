@@ -61,7 +61,7 @@ public class AccelerometerOp extends OpMode implements SensorEventListener {
     */
     @Override
     public void loop() {
-        telemetry.addData("1 Start", "LightOp started at " + startDate);
+        telemetry.addData("1 Start", "AccelerometerOp started at " + startDate);
         telemetry.addData("2 units", "values in SI units (m/s^2)");
         telemetry.addData("3 x-axis", "x-axis = " + acceleration[0]);
         telemetry.addData("4 y-axis", "y-axis = " + acceleration[1]);

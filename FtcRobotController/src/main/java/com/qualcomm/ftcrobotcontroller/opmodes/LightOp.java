@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * An op mode that returns the amblient light levels as telemetry
+ * An op mode that returns the ambient light sensor value as telemetry
  */
 public class LightOp extends OpMode implements SensorEventListener {
     private String startDate;
@@ -72,8 +72,6 @@ public class LightOp extends OpMode implements SensorEventListener {
     }
 
     public void onSensorChanged(SensorEvent event) {
-        // we need both sensor values to calculate orientation
-        // only one value will have changed when this method called, we assume we can still use the other value.
         if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
             mLight = event.values;
         }

@@ -60,6 +60,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("OrientOp", OrientOp.class);
     manager.register("LightOp", LightOp.class);
     manager.register("AccelerometerOp", AccelerometerOp.class);
+    manager.register("LinearAccelerometerOp", LinearAccelerometerOp.class);
     manager.register("MagneticOp", MagneticOp.class);
     manager.register("ProximityOp", ProximityOp.class);
     /*

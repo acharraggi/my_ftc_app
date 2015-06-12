@@ -52,8 +52,8 @@ public class MagneticOp extends OpMode implements SensorEventListener {
     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
     */
     @Override
-    public void loop() { //micro-Tesla (uT) units
-        telemetry.addData("1 Start", "OrientOp started at " + startDate);
+    public void loop() {
+        telemetry.addData("1 Start", "MagneticOp started at " + startDate);
         telemetry.addData("2 units", "values in micro-Tesla (uT) units");
         telemetry.addData("3 x", "magnetic x = "+magneticValues[0]);
         telemetry.addData("4 y", "magnetic y  = "+magneticValues[1]);

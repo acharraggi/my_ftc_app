@@ -13,24 +13,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * An op mode that returns the proximity sensor values as telemetry.
- * Note: the ZTE Speed phone appears to have a binary near/far type sensor.
- *    Perhaps based on the front facing camera, only seems sensitive in that area.
- *    It reports 5cm when nothing nearer than 5cm, and 0cm when something is closer.
+ * An Op Mode that returns the raw Linear Accelerometer sensor values as telemetry
  */
-public class ProximityOp extends OpMode implements SensorEventListener {
+public class LinearAccelerometerOp extends OpMode implements SensorEventListener {
     private String startDate;
     private SensorManager mSensorManager;
-    Sensor proximity;
+    Sensor accelerometer;
 
-    private float proximityValue = 0.0f;       // proximity value in cm
+    private float[] acceleration = {0.0f,0.0f,0.0f};    // SI units (m/s^2)
+    //values[0]: Acceleration minus Gx on the x-axis
+    //values[1]: Acceleration minus Gy on the y-axis
+    //values[2]: Acceleration minus Gz on the z-axis
 
-    private float[] mProximity;       // latest sensor values
+    private float[] mAccelerometer;       // latest sensor values
 
     /*
     * Constructor
     */
-    public ProximityOp() {
+    public LinearAccelerometerOp() {
 
     }
 
@@ -45,10 +45,10 @@ public class ProximityOp extends OpMode implements SensorEventListener {
         // needed FtcConfig to get context for getSystemService
         // but this required change to FtcRobotControllerActivity to set the context for us
         mSensorManager = (SensorManager) FtcConfig.context.getSystemService(Context.SENSOR_SERVICE);
-        proximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         // delay value is SENSOR_DELAY_UI which is ok for telemetry, maybe not for actual robot use
-        mSensorManager.registerListener(this, proximity, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
     }
 
     /*
@@ -57,8 +57,11 @@ public class ProximityOp extends OpMode implements SensorEventListener {
     */
     @Override
     public void loop() {
-        telemetry.addData("1 Start", "ProximityOp started at " + startDate);
-        telemetry.addData("2 proximity", "proximity distance = " + proximityValue + " cm");
+        telemetry.addData("1 Start", "LinearAccelerometerOp started at " + startDate);
+        telemetry.addData("2 units", "values in SI units (m/s^2)");
+        telemetry.addData("3 x-axis", "x-axis = " + acceleration[0]);
+        telemetry.addData("4 y-axis", "y-axis = " + acceleration[1]);
+        telemetry.addData("5 z-axis", "z-axis = " + acceleration[2]);
     }
 
     /*
@@ -75,10 +78,12 @@ public class ProximityOp extends OpMode implements SensorEventListener {
     }
 
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
-            mProximity = event.values;
-            if (mProximity != null) {
-                proximityValue = mProximity[0]; // only one value from this sensor
+        if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+            mAccelerometer = event.values;
+            if (mAccelerometer != null) {
+                acceleration[0] = mAccelerometer[0]; // Acceleration on the x-axis
+                acceleration[1] = mAccelerometer[1]; // Acceleration on the y-axis
+                acceleration[2] = mAccelerometer[2]; // Acceleration on the z-axis
             }
         }
     }
