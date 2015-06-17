@@ -83,7 +83,7 @@ import java.io.FileNotFoundException;
 public class FtcRobotControllerActivity extends Activity {
 
   private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
-  private static final boolean USE_MOCK_HARDWARE_FACTORY = false;
+  private static final boolean USE_MOCK_HARDWARE_FACTORY = true;
   private static final int NUM_GAMEPADS = 2;
 
   protected static final String VIEW_LOGS_ACTION = "com.qualcomm.ftcrobotcontroller.VIEW_LOGS";

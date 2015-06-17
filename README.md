@@ -22,6 +22,7 @@ Change History:
 - v0.8 - create RotationOp to return raw rotation vector sensor values.
 - v0.9 - create GravityOp to return raw gravity_type sensor values, update comments and telemetry in OrientOp.
 - v0.9.1 - fix formatting problem in README changes by converting changes to a Markdown unordered list
+- v.10 - create MockTeleOp which is a copy of K9TeleOp that uses USE_MOCK_HARDWARE_FACTORY = true in FtcRobotControllerActivity
 
 
 ---
