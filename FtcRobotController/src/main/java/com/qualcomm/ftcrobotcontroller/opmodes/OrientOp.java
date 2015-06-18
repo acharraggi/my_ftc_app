@@ -6,7 +6,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import com.qualcomm.ftcrobotcontroller.FtcConfig;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.text.SimpleDateFormat;
@@ -48,9 +47,7 @@ public class OrientOp extends OpMode implements SensorEventListener {
     public void start() {
         startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 
-        // needed FtcConfig to get context for getSystemService
-        // but this required change to FtcRobotControllerActivity to set the context for us
-        mSensorManager = (SensorManager) FtcConfig.context.getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
