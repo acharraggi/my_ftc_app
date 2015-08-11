@@ -20,7 +20,7 @@ import java.util.Date;
 public class ProximityOp extends OpMode implements SensorEventListener {
     private String startDate;
     private SensorManager mSensorManager;
-    Sensor proximity;
+    private Sensor proximity;
 
     private float proximityValue = 0.0f;       // proximity value in cm
 
@@ -35,14 +35,22 @@ public class ProximityOp extends OpMode implements SensorEventListener {
 
     /*
     * Code to run when the op mode is first enabled goes here
-    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init()
     */
+    @Override
+    public void init() {
+        mSensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
+        proximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        proximityValue = 0.0f;
+    }
+
+    /*
+* Code to run when the op mode is first enabled goes here
+* @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+*/
     @Override
     public void start() {
         startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
-
-        mSensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
-        proximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         // delay value is SENSOR_DELAY_UI which is ok for telemetry, maybe not for actual robot use
         mSensorManager.registerListener(this, proximity, SensorManager.SENSOR_DELAY_UI);
@@ -54,8 +62,8 @@ public class ProximityOp extends OpMode implements SensorEventListener {
     */
     @Override
     public void loop() {
-        telemetry.addData("1 Start", "ProximityOp started at " + startDate);
-        telemetry.addData("2 proximity", "proximity distance = " + proximityValue + " cm");
+//        telemetry.addData("1", "started at " + startDate);
+        telemetry.addData("distance", proximityValue + " cm");
     }
 
     /*

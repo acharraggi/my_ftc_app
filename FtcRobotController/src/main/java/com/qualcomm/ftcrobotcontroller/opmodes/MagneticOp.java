@@ -17,7 +17,7 @@ import java.util.Date;
 public class MagneticOp extends OpMode implements SensorEventListener {
     private String startDate;
     private SensorManager mSensorManager;
-    Sensor magnetometer;
+    private Sensor magnetometer;
 
     private float[] magneticValues = {0.0f, 0.0f, 0.0f};  // micro-Tesla (uT) units
     private float[] mGeomagnetic;   // latest sensor values, x y and z axis
@@ -31,14 +31,25 @@ public class MagneticOp extends OpMode implements SensorEventListener {
 
     /*
     * Code to run when the op mode is first enabled goes here
-    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init()
     */
+    @Override
+    public void init() {
+        mSensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
+        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        magneticValues[0] = 0.0f;
+        magneticValues[1] = 0.0f;
+        magneticValues[2] = 0.0f;
+    }
+
+    /*
+* Code to run when the op mode is first enabled goes here
+* @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+*/
     @Override
     public void start() {
         startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
-
-        mSensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
-        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
         // delay value is SENSOR_DELAY_UI which is ok for telemetry, maybe not for actual robot use
         mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
@@ -50,11 +61,11 @@ public class MagneticOp extends OpMode implements SensorEventListener {
     */
     @Override
     public void loop() {
-        telemetry.addData("1 Start", "MagneticOp started at " + startDate);
-        telemetry.addData("2 units", "values in micro-Tesla (uT) units");
-        telemetry.addData("3 x", "magnetic x = "+magneticValues[0]);
-        telemetry.addData("4 y", "magnetic y  = "+magneticValues[1]);
-        telemetry.addData("5 z", "magnetic z  = "+magneticValues[2]);
+//        telemetry.addData("1 Start", "MagneticOp started at " + startDate);
+//        telemetry.addData("2 units", "values in micro-Tesla (uT) units");
+        telemetry.addData("magnetic x", magneticValues[0]);
+        telemetry.addData("magnetic y", magneticValues[1]);
+        telemetry.addData("magnetic z", magneticValues[2]);
     }
 
     /*

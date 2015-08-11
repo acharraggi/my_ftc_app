@@ -20,13 +20,21 @@ public class HelloOp extends OpMode {
 
     /*
     * Code to run when the op mode is first enabled goes here
+    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init()
+    */
+    @Override
+    public void init() {
+
+    }
+
+    /*
+    * Code to run when the op mode is first enabled goes here
     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
     */
     @Override
     public void start() {
         startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
     }
-
 
     /*
     * This method will be called repeatedly in a loop

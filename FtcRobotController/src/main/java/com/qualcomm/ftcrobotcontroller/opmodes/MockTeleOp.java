@@ -84,7 +84,7 @@ public class MockTeleOp extends OpMode {
     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
     */
     @Override
-    public void start() {
+    public void init() {
         startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
         	/*
 		 * Use the hardwareMap to get the dc motors and servos by name. Note

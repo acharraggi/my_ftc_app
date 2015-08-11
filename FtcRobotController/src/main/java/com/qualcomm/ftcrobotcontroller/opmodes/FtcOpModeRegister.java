@@ -71,14 +71,6 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
     manager.register("NullOp", NullOp.class);
 
-
-    /*
-     * The following example op modes are designed to work with a K9-style robot.
-     *  - K9TeleOp is a simple driver controlled program.
-     *  - K9IrSeeker uses a legacy IR seeker V2 sensor to follow a beacon.
-     *  - K9Line uses a legacy LEGO NXT light sensor to follow a white line.
-     */
-
     manager.register("HelloOp", HelloOp.class);
     manager.register("OrientOp", OrientOp.class);
     manager.register("LightOp", LightOp.class);
@@ -89,10 +81,22 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("RotationOp", RotationOp.class);
     manager.register("GravityOp", GravityOp.class);
     manager.register("MockTeleOp", MockTeleOp.class);
+
     /*
+    manager.register("NxtEncoderOp", NxtEncoderOp.class);
+    */
+
+     /*
+     * The following example op modes are designed to work with a K9-style robot.
+     *  - K9TeleOp is a simple driver controlled program.
+     *  - K9IrSeeker uses a legacy IR seeker V2 sensor to follow a beacon.
+     *  - K9Line uses a legacy LEGO NXT light sensor to follow a white line.
+
+    manager.register("K9AutoTime", K9AutoTime.class);
     manager.register("K9TeleOp", K9TeleOp.class);
     manager.register("K9IrSeeker", K9IrSeeker.class);
     manager.register("K9Line", K9Line.class);
+     */
 
     /*
      * The following example op modes are designed to work with a pushbot-style robot.
@@ -101,19 +105,13 @@ public class FtcOpModeRegister implements OpModeRegister {
      *  - PushBotDriveTouch uses the LinearOpMode class and shows how to autonomously drive if a button is not pressed.
      *  - PushBotIrSeek uses the LinearOpMode class and shows how to track an IR beacon.
      *  - PushBotSquare uses the LinearOpMOde class and shows how to drive in a square pattern autonomously.
-     */
 
     manager.register("PushBotManual", PushBotManual.class);
     manager.register("PushBotAuto", PushBotAuto.class);
     manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
     manager.register("PushBotIrSeek", PushBotIrSeek.class);
     manager.register("PushBotSquare", PushBotSquare.class);
-
-    manager.register("K9AutoTime", K9AutoTime.class);
-    manager.register("IrSeekerOp", IrSeekerOp.class);
-    manager.register("CompassCalibration", CompassCalibration.class);
-    manager.register("NxtTeleOp", NxtTeleOp.class);
-    manager.register("NxtEncoderOp", NxtEncoderOp.class);
     */
+
   }
 }

@@ -17,7 +17,7 @@ import java.util.Date;
 public class LinearAccelerometerOp extends OpMode implements SensorEventListener {
     private String startDate;
     private SensorManager mSensorManager;
-    Sensor accelerometer;
+    private Sensor accelerometer;
 
     private float[] acceleration = {0.0f,0.0f,0.0f};    // SI units (m/s^2)
     //values[0]: Acceleration minus Gx on the x-axis
@@ -38,11 +38,21 @@ public class LinearAccelerometerOp extends OpMode implements SensorEventListener
     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
     */
     @Override
-    public void start() {
-        startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
-
+    public void init() {
         mSensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+
+        acceleration[0] = 0.0f;
+        acceleration[1] = 0.0f;
+        acceleration[2] = 0.0f;
+    }
+    /*
+        * Code to run when the op mode is first enabled goes here
+        * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+        */
+    @Override
+    public void start() {
+        startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 
         // delay value is SENSOR_DELAY_UI which is ok for telemetry, maybe not for actual robot use
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
@@ -54,11 +64,11 @@ public class LinearAccelerometerOp extends OpMode implements SensorEventListener
     */
     @Override
     public void loop() {
-        telemetry.addData("1 Start", "LinearAccelerometerOp started at " + startDate);
-        telemetry.addData("2 units", "values in SI units (m/s^2)");
-        telemetry.addData("3 x-axis", "x-axis = " + acceleration[0]);
-        telemetry.addData("4 y-axis", "y-axis = " + acceleration[1]);
-        telemetry.addData("5 z-axis", "z-axis = " + acceleration[2]);
+//        telemetry.addData("1 Start", "LinearAccelerometerOp started at " + startDate);
+//        telemetry.addData("2 units", "values in SI units (m/s^2)");
+        telemetry.addData("x-axis",  acceleration[0]);
+        telemetry.addData("y-axis",  acceleration[1]);
+        telemetry.addData("z-axis",  acceleration[2]);
     }
 
     /*
