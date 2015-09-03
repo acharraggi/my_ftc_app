@@ -25,6 +25,7 @@ Change History:
 - v0.10 - create MockTeleOp which is a copy of K9TeleOp that uses USE_MOCK_HARDWARE_FACTORY = true in FtcRobotControllerActivity.
 - v0.10.1 - replace FtcConfig.context with hardwareMap.appContext in all OpModes.
 - v0.10.2 - merge FTC SDK (20150803_001) changes into my app: add init() to opModes, change telemetry.
+- v0.11 - add IrSeekerTest1 opMode for IR seeker v3.
 
 
 ---

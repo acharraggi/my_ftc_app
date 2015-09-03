@@ -71,6 +71,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
     manager.register("NullOp", NullOp.class);
 
+    /* various opModes for testing phone sensors */
     manager.register("HelloOp", HelloOp.class);
     manager.register("OrientOp", OrientOp.class);
     manager.register("LightOp", LightOp.class);
@@ -80,7 +81,11 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("ProximityOp", ProximityOp.class);
     manager.register("RotationOp", RotationOp.class);
     manager.register("GravityOp", GravityOp.class);
-    manager.register("MockTeleOp", MockTeleOp.class);
+
+    /* various opModes for testing */
+    manager.register("IrSeekerTest1", IrSeekerTest1.class);
+
+    //manager.register("MockTeleOp", MockTeleOp.class);
 
     /*
     manager.register("NxtEncoderOp", NxtEncoderOp.class);
