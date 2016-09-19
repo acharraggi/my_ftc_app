@@ -1,5 +1,8 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
+/**
+ * Top-level build file for ftc_app project.
+ *
+ * It is extraordinarily rare that you will ever need to edit this file.
+ */
 buildscript {
     repositories {
         jcenter()
@@ -12,11 +15,4 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        jcenter()
-        flatDir {
-            dirs 'out'
-        }
-    }
-}
+
