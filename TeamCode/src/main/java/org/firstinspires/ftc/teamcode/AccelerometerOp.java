@@ -73,9 +73,14 @@ public class AccelerometerOp extends OpMode implements SensorEventListener {
     public void loop() {
 //        telemetry.addData("1 Start", "AccelerometerOp started at " + startDate);
 //        telemetry.addData("2 units", "values in SI units (m/s^2)");
-        telemetry.addData("x-axis",  acceleration[0]);
-        telemetry.addData("y-axis",  acceleration[1]);
-        telemetry.addData("z-axis",  acceleration[2]);
+        if (mAccelerometer != null) {
+            telemetry.addData("x-axis", acceleration[0]);
+            telemetry.addData("y-axis", acceleration[1]);
+            telemetry.addData("z-axis", acceleration[2]);
+        }
+        else {
+            telemetry.addData("note", "no default accelerometer sensor on phone");
+        }
     }
 
     /*

@@ -65,9 +65,14 @@ public class MagneticOp extends OpMode implements SensorEventListener {
     public void loop() {
 //        telemetry.addData("1 Start", "MagneticOp started at " + startDate);
 //        telemetry.addData("2 units", "values in micro-Tesla (uT) units");
-        telemetry.addData("magnetic x", magneticValues[0]);
-        telemetry.addData("magnetic y", magneticValues[1]);
-        telemetry.addData("magnetic z", magneticValues[2]);
+        if (mGeomagnetic != null) {
+            telemetry.addData("magnetic x", magneticValues[0]);
+            telemetry.addData("magnetic y", magneticValues[1]);
+            telemetry.addData("magnetic z", magneticValues[2]);
+        }
+        else {
+            telemetry.addData("note", "no default magnetic sensor on phone");
+        }
     }
 
     /*

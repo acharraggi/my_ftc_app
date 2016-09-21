@@ -15,7 +15,6 @@ import java.util.Date;
 /**
  * An Op Mode that returns the raw gravity sensor values as telemetry
  */
-//TODO check if Moto G 3 supports a raw gravity sensor, apparently not.
 @Autonomous(name = "GravityOp", group = "Demo")
 public class GravityOp extends OpMode implements SensorEventListener {
     private String startDate;
@@ -68,9 +67,14 @@ public class GravityOp extends OpMode implements SensorEventListener {
     public void loop() {
 //        telemetry.addData("1 Start", "GravityOp started at " + startDate);
 //        telemetry.addData("2 units", "values in SI units (m/s^2)");
-        telemetry.addData("x-axis", gravityValues[0]);
-        telemetry.addData("y-axis", gravityValues[1]);
-        telemetry.addData("z-axis", gravityValues[2]);
+        if (mGravitySensor != null) {
+            telemetry.addData("x-axis", gravityValues[0]);
+            telemetry.addData("y-axis", gravityValues[1]);
+            telemetry.addData("z-axis", gravityValues[2]);
+        }
+        else {
+            telemetry.addData("note", "no default gravity sensor on phone");
+        }
 //        telemetry.addData("3 z-axis", gravityValues[2]+" SI units (m/s^2)");
     }
 

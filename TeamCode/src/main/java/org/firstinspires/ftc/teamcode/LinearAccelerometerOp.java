@@ -15,7 +15,6 @@ import java.util.Date;
 /**
  * An Op Mode that returns the raw Linear Accelerometer sensor values as telemetry
  */
-//TODO check if Moto G 3 supports a raw LinearAccelerometer sensor, apparently not.
 @Autonomous(name = "LinearAccelerometerOp", group = "Demo")
 public class LinearAccelerometerOp extends OpMode implements SensorEventListener {
     private String startDate;
@@ -69,9 +68,15 @@ public class LinearAccelerometerOp extends OpMode implements SensorEventListener
     public void loop() {
 //        telemetry.addData("1 Start", "LinearAccelerometerOp started at " + startDate);
 //        telemetry.addData("2 units", "values in SI units (m/s^2)");
-        telemetry.addData("x-axis",  acceleration[0]);
-        telemetry.addData("y-axis",  acceleration[1]);
-        telemetry.addData("z-axis",  acceleration[2]);
+        if (mAccelerometer != null) {
+            telemetry.addData("x-axis", acceleration[0]);
+            telemetry.addData("y-axis", acceleration[1]);
+            telemetry.addData("z-axis", acceleration[2]);
+        }
+        else {
+            telemetry.addData("note", "no default accelerometer on phone");
+        }
+
     }
 
     /*

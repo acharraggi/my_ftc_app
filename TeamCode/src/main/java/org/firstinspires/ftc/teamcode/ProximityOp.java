@@ -66,7 +66,12 @@ public class ProximityOp extends OpMode implements SensorEventListener {
     @Override
     public void loop() {
 //        telemetry.addData("1", "started at " + startDate);
-        telemetry.addData("distance", proximityValue + " cm");
+        if (mProximity != null) {
+            telemetry.addData("distance", proximityValue + " cm");
+        }
+        else {
+            telemetry.addData("note", "no default proximity sensor on phone");
+        }
     }
 
     /*

@@ -16,7 +16,6 @@ import java.util.Date;
 /**
  * An Op Mode that returns the rotation vector sensor values as telemetry
  */
-//TODO check if Moto G 3 supports a raw rotation sensor, apparently not.
 @Autonomous(name = "RotationOp", group = "Demo")
 public class RotationOp extends OpMode implements SensorEventListener {
     private String startDate;
@@ -74,15 +73,19 @@ public class RotationOp extends OpMode implements SensorEventListener {
     */
     @Override
     public void loop() {
-        telemetry.addData("1 x", String.format("%8.4f,                 y:%8.4f", rotationVector[0], rotationVector[1]));
-        telemetry.addData("2 z", String.format("%8.4f,   cos(θ/2):%8.4f", rotationVector[2], rotationVector[3]));
-        //telemetry.addData("1 x", rotationVector[0]+", y:"+rotationVector[1]);
-        //telemetry.addData("2 z", rotationVector[2]+", cos(θ/2):"+rotationVector[4]);
-        if (rotationVector[4] == -1.0f) {
-            telemetry.addData("3 Accuracy", " value unavailable");
+        if (mRotationVector != null) {
+            telemetry.addData("1 x", String.format("%8.4f,                 y:%8.4f", rotationVector[0], rotationVector[1]));
+            telemetry.addData("2 z", String.format("%8.4f,   cos(θ/2):%8.4f", rotationVector[2], rotationVector[3]));
+            //telemetry.addData("1 x", rotationVector[0]+", y:"+rotationVector[1]);
+            //telemetry.addData("2 z", rotationVector[2]+", cos(θ/2):"+rotationVector[4]);
+            if (rotationVector[4] == -1.0f) {
+                telemetry.addData("3 Accuracy", " value unavailable");
+            } else {
+                telemetry.addData("3 Accuracy", rotationVector[4] + " radians");
+            }
         }
         else {
-            telemetry.addData("3 Accuracy", rotationVector[4] + " radians");
+            telemetry.addData("note", "no default rotation sensor on phone");
         }
 
 //        telemetry.addData("1 Start", "RotationOp started at " + startDate);

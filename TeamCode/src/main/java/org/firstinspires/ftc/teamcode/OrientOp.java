@@ -79,9 +79,19 @@ public class OrientOp extends OpMode implements SensorEventListener {
 //        telemetry.addData("2 note1", "values below are in degrees" );
 //        telemetry.addData("3 note2", "azimuth relates to magnetic north" );
 //        telemetry.addData("4 note3", " " );
-        telemetry.addData("azimuth", Math.round(Math.toDegrees(azimuth)));
-        telemetry.addData("pitch", Math.round(Math.toDegrees(pitch)));
-        telemetry.addData("roll", Math.round(Math.toDegrees(roll)));
+        if (mGravity != null && mGeomagnetic != null) {
+            telemetry.addData("azimuth", Math.round(Math.toDegrees(azimuth)));
+            telemetry.addData("pitch", Math.round(Math.toDegrees(pitch)));
+            telemetry.addData("roll", Math.round(Math.toDegrees(roll)));
+        }
+        else {
+            if (mGravity != null) {
+                telemetry.addData("note1", "no default accelerometer sensor on phone");
+            }
+            if (mGeomagnetic != null) {
+                telemetry.addData("note2", "no default magnetometer sensor on phone");
+            }
+        }
     }
 
     /*

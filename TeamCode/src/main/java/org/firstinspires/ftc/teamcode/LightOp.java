@@ -66,7 +66,12 @@ public class LightOp extends OpMode implements SensorEventListener {
     @Override
     public void loop() {
         //telemetry.addData("1 Start", "LightOp started at " + startDate);
-        telemetry.addData("Light Level", Math.round(lightLevel) + " SI lux");
+        if (mLight != null) {
+            telemetry.addData("Light Level", Math.round(lightLevel) + " SI lux");
+        }
+        else {
+            telemetry.addData("note", "no default light sensor on phone");
+        }
     }
 
     /*
