@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.teamcode;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.text.SimpleDateFormat;
@@ -18,6 +19,7 @@ import java.util.Date;
  * remapCoordinateSystem() which one might want.
  * see: http://developer.android.com/reference/android/hardware/SensorManager.html#remapCoordinateSystem(float[], int, int, float[])
  */
+@Autonomous(name = "OrientOp", group = "Demo")
 public class OrientOp extends OpMode implements SensorEventListener {
     private String startDate;
     private SensorManager mSensorManager;

@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.teamcode;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.text.SimpleDateFormat;
@@ -15,6 +16,8 @@ import java.util.Date;
 /**
  * An Op Mode that returns the rotation vector sensor values as telemetry
  */
+//TODO check if Moto G 3 supports a raw rotation sensor, apparently not.
+@Autonomous(name = "RotationOp", group = "Demo")
 public class RotationOp extends OpMode implements SensorEventListener {
     private String startDate;
     private SensorManager mSensorManager;

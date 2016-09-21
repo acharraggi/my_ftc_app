@@ -1,48 +1,51 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.teamcode;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * An op mode that returns the ambient light sensor value as telemetry
+ * An op mode that returns the proximity sensor values as telemetry.
+ * Note: the ZTE Speed phone appears to have a binary near/far type sensor.
+ *    Perhaps based on the front facing camera, only seems sensitive in that area.
+ *    It reports 5cm when nothing nearer than 5cm, and 0cm when something is closer.
  */
-public class LightOp extends OpMode implements SensorEventListener {
+// Moto 3 G reports 100cm, then 3cm when close
+@Autonomous(name = "ProximityOp", group = "Demo")
+public class ProximityOp extends OpMode implements SensorEventListener {
     private String startDate;
     private SensorManager mSensorManager;
-    private Sensor light;
+    private Sensor proximity;
 
-    private float lightLevel = 0.0f;       // Ambient light level in SI lux units
+    private float proximityValue = 0.0f;       // proximity value in cm
 
-    private float[] mLight;       // latest sensor values
+    private float[] mProximity;       // latest sensor values
 
     /*
     * Constructor
     */
-    public LightOp() {
+    public ProximityOp() {
 
     }
 
     /*
     * Code to run when the op mode is first enabled goes here
-    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init()
     */
     @Override
     public void init() {
-        Log.d("LightOp", "init() entered");
         mSensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
-        light = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-
-        lightLevel = 0.0f;
-   }
+        proximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        proximityValue = 0.0f;
+    }
 
     /*
 * Code to run when the op mode is first enabled goes here
@@ -50,11 +53,10 @@ public class LightOp extends OpMode implements SensorEventListener {
 */
     @Override
     public void start() {
-        Log.d("LightOp", "start() entered");
         startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 
         // delay value is SENSOR_DELAY_UI which is ok for telemetry, maybe not for actual robot use
-        mSensorManager.registerListener(this, light, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, proximity, SensorManager.SENSOR_DELAY_UI);
     }
 
     /*
@@ -63,8 +65,8 @@ public class LightOp extends OpMode implements SensorEventListener {
     */
     @Override
     public void loop() {
-        //telemetry.addData("1 Start", "LightOp started at " + startDate);
-        telemetry.addData("Light Level", Math.round(lightLevel) + " SI lux");
+//        telemetry.addData("1", "started at " + startDate);
+        telemetry.addData("distance", proximityValue + " cm");
     }
 
     /*
@@ -73,23 +75,19 @@ public class LightOp extends OpMode implements SensorEventListener {
     */
     @Override
     public void stop() {
-        Log.d("LightOp", "stop() entered");
         mSensorManager.unregisterListener(this);
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        Log.d("LightOp", "onAccuracyChanged() entered");
         // not sure if needed, placeholder just in case
     }
 
     public void onSensorChanged(SensorEvent event) {
-        Log.d("LightOp", "onSensorChanged() entered");
-        if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-            mLight = event.values;
-        }
-        else mLight = null;
-        if (mLight != null) {
-            lightLevel = mLight[0]; // only one value from this sensor
+        if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+            mProximity = event.values;
+            if (mProximity != null) {
+                proximityValue = mProximity[0]; // only one value from this sensor
+            }
         }
     }
 }

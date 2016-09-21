@@ -28,11 +28,11 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.ftccommon.DbgLog;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 
 /**
@@ -41,6 +41,9 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  * Set it to 1200 at 180.  <br>
  * Make sure the side of the beacon with the LED on is facing the robot. <br>
  */
+//TODO test with IR seeker
+@Autonomous(name = "MockTeleOp", group = "Demo")
+@Disabled
 public class IrSeekerTest1 extends OpMode {
 
   IrSeekerSensor irSeeker;

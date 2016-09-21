@@ -1,5 +1,6 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.text.SimpleDateFormat;
@@ -8,6 +9,7 @@ import java.util.Date;
 /**
  * A test op mode like NullOp that just displays Hello World!
  */
+@Autonomous(name = "HelloOp", group = "Concept")
 public class HelloOp extends OpMode {
     private String startDate;
 

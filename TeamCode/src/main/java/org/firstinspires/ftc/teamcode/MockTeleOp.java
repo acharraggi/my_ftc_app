@@ -1,6 +1,9 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.teamcode;
 
+//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -36,6 +39,9 @@ import java.util.Date;
  hwMap.servo.put("a", new Servo(sc, 1));
  hwMap.servo.put("b", new Servo(sc, 6));
   */
+//TODO make a real teleop mode, see pushbot samples
+//TODO test mock teleop with gamepads
+@TeleOp(name = "MockTeleOp", group = "Demo")
 public class MockTeleOp extends OpMode {
     private String startDate;
 
