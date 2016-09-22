@@ -1,4 +1,4 @@
-# ftc_app
+﻿# ftc_app
 ## 3491 FTC app
 A test app to experiment on the ZTE Speed phones while we wait for the rest of the new hardware.
 
@@ -26,6 +26,7 @@ Change History:
 - v0.10.1 - replace FtcConfig.context with hardwareMap.appContext in all OpModes.
 - v0.10.2 - merge FTC SDK (20150803_001) changes into my app: add init() to opModes, change telemetry.
 - v0.11 - add IrSeekerTest1 opMode for IR seeker v3.
+- v1.0 - merge FTC SDK 2.2, restore app name to avoid future merge conflicts. Move opModes to TeamCode. Add Pushbot Teleop.
 
 
 ---
