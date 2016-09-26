@@ -39,7 +39,6 @@ import java.util.Date;
  hwMap.servo.put("a", new Servo(sc, 1));
  hwMap.servo.put("b", new Servo(sc, 6));
   */
-//TODO make a real teleop mode, see pushbot samples
 //TODO test mock teleop with gamepads
 @TeleOp(name = "MockTeleOp", group = "Demo")
 public class MockTeleOp extends OpMode {

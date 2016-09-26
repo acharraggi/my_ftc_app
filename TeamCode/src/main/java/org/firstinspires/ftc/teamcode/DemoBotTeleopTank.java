@@ -35,6 +35,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -42,6 +44,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
+ * Copied from sample PushbotTeleopTank_Iterative
  *
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the MyHardwarePushbot class.
@@ -54,14 +57,17 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
-public class PushbotTeleopTank_Iterative extends OpMode{
+@TeleOp(name="DemoBot: Tank Drive", group="DemoBot")
+public class DemoBotTeleopTank extends OpMode{
 
     /* Declare OpMode members. */
     MyHardwarePushbot robot       = new MyHardwarePushbot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+    OpticalDistanceSensor odsSensor;  // Hardware Device Object
+    TouchSensor touchSensor;  // Hardware Device Object
+
 
 
     /*
@@ -73,6 +79,9 @@ public class PushbotTeleopTank_Iterative extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        odsSensor = hardwareMap.opticalDistanceSensor.get("ods sensor");
+        touchSensor = hardwareMap.touchSensor.get("touch sensor");
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -100,12 +109,19 @@ public class PushbotTeleopTank_Iterative extends OpMode{
     public void loop() {
         double left;
         double right;
+        double ly,ry;
+
+        double rawLight;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        ly = -gamepad1.left_stick_y;
+        ry = -gamepad1.right_stick_y;
+        left = scalePower(ly);
+        right = scalePower(ry);
         robot.leftMotor.setPower(left);
         robot.rightMotor.setPower(right);
+
+        rawLight = odsSensor.getRawLightDetected();
 
         // Use gamepad left & right Bumpers to open and close the claw
 //        if (gamepad1.right_bumper)
@@ -127,9 +143,14 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 //            robot.armMotor.setPower(0.0);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
+        telemetry.addData("left",  "%.2f, %.2f", left, ly);
+        telemetry.addData("right", "%.2f, %.2f", right, ry);
+        telemetry.addData("rawLight", "%.2f", rawLight);
+        if (touchSensor.isPressed())
+            telemetry.addData("Touch", "Is Pressed");
+        else
+            telemetry.addData("Touch", "Is Not Pressed");
         updateTelemetry(telemetry);
     }
 
@@ -138,6 +159,13 @@ public class PushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void stop() {
+    }
+
+    private double scalePower(double p) {
+        if (p >= 0) {
+            return (p * p);
+        }
+        else return (-p * p);
     }
 
 }

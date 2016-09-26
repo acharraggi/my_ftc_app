@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * A test op mode like NullOp that just displays Hello World!
  */
-@Autonomous(name = "HelloOp", group = "Concept")
+@Autonomous(name = "HelloOp", group = "Demo")
 public class HelloOp extends OpMode {
     private String startDate;
 

@@ -41,10 +41,9 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  * Set it to 1200 at 180.  <br>
  * Make sure the side of the beacon with the LED on is facing the robot. <br>
  */
-//TODO test with IR seeker
-@Autonomous(name = "MockTeleOp", group = "Demo")
-@Disabled
-public class IrSeekerTest1 extends OpMode {
+//TODO test with IR seeker, add code to drive to IR source in autonomous mode
+@Autonomous(name = "DemoBotAutoIR", group = "DemoBot")
+public class DemoBotAutoIR extends OpMode {
 
   IrSeekerSensor irSeeker;
 

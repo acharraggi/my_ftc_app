@@ -1,4 +1,4 @@
-/* Copyright (c) 2014, 2015 Qualcomm Technologies Inc
+/* Copyright (c) 2015 Qualcomm Technologies Inc
 
 All rights reserved.
 
@@ -31,47 +31,47 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
-/**
- * Demonstrates empty OpMode
+/*
+ * This is an example LinearOpMode that shows how to use
+ * a legacy (NXT-compatible) Touch Sensor.
+ * It assumes that the touch sensor is configured with a name of "touch sensor".
+ *
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Autonomous(name = "NullOp", group = "Demo")
-public class NullOp extends OpMode {
+//TODO check if this also works for MR touch sensor
+@TeleOp(name = "DemoBot: touch sensor", group = "DemoBot")
+public class DemoBotSensorTouch extends LinearOpMode {
 
-  private ElapsedTime runtime = new ElapsedTime();
+  TouchSensor touchSensor;  // Hardware Device Object
 
   @Override
-  public void init() {
-    telemetry.addData("Status", "Initialized");
-  }
+  public void runOpMode() throws InterruptedException {
 
-  /*
-     * Code to run when the op mode is first enabled goes here
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-     */
-  @Override
-  public void init_loop() {
-  }
+    // get a reference to our Light Sensor object.
+    touchSensor = hardwareMap.touchSensor.get("touch sensor");
+    int counter = 0;
 
-  /*
-   * This method will be called ONCE when start is pressed
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-  @Override
-  public void start() {
-    runtime.reset();
-  }
+    // wait for the start button to be pressed.
+    waitForStart();
 
-  /*
-   * This method will be called repeatedly in a loop
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-  @Override
-  public void loop() {
-    telemetry.addData("Status", "Run Time: " + runtime.toString());
+    // while the op mode is active, loop and read the light levels.
+    // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+    while (true) {
+
+      // send the info back to driver station using telemetry function.
+      if (touchSensor.isPressed())
+        telemetry.addData("Touch", "Is Pressed");
+      else
+        telemetry.addData("Touch", "Is Not Pressed");
+
+      telemetry.update();
+      idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
+    }
   }
 }
