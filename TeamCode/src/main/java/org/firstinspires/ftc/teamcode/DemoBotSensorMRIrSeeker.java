@@ -51,7 +51,6 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @TeleOp(name = "DemoBot: MR IR Seeker", group = "DemoBot")
-@Disabled
 public class DemoBotSensorMRIrSeeker extends LinearOpMode {
 
   @Override
@@ -60,7 +59,7 @@ public class DemoBotSensorMRIrSeeker extends LinearOpMode {
     IrSeekerSensor irSeeker;    // Hardware Device Object
 
     // get a reference to our GyroSensor object.
-    irSeeker = hardwareMap.irSeekerSensor.get("seeker");
+    irSeeker = hardwareMap.irSeekerSensor.get("ir_seeker");
 
     // wait for the start button to be pressed.
     waitForStart();
