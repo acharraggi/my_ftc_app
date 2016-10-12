@@ -68,7 +68,10 @@ public class DemoBotTeleopTank extends OpMode{
     OpticalDistanceSensor odsSensor;  // Hardware Device Object
     TouchSensor touchSensor;  // Hardware Device Object
 
-
+    private long timeTick;              // last timeTick
+    private long timeTickLastSecond;    // timeTick of last second
+    private int  ticksPerSecond;        // number of ticks/sec
+    private int  ticksThisSecond;       // ticks so far this second
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -83,6 +86,11 @@ public class DemoBotTeleopTank extends OpMode{
         odsSensor = hardwareMap.opticalDistanceSensor.get("ods sensor");
         touchSensor = hardwareMap.touchSensor.get("touch sensor");
 
+        timeTick = 0;
+        timeTickLastSecond = 0;
+        ticksPerSecond = 0;
+        ticksThisSecond = 0;
+
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
         updateTelemetry(telemetry);
@@ -91,15 +99,20 @@ public class DemoBotTeleopTank extends OpMode{
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
-    @Override
-    public void init_loop() {
-    }
+//    @Override
+//    public void init_loop() {
+//        timeTick = 0;
+//    }
 
     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
     public void start() {
+        timeTick = System.currentTimeMillis();
+        timeTickLastSecond = timeTick;
+        ticksPerSecond = 0;
+        ticksThisSecond = 0;
     }
 
     /*
@@ -110,8 +123,15 @@ public class DemoBotTeleopTank extends OpMode{
         double left;
         double right;
         double ly,ry;
-
         double rawLight;
+
+        long newTick = System.currentTimeMillis();
+        ticksThisSecond = ticksThisSecond + 1;
+        if(newTick - timeTickLastSecond > 1000) {  // we've started a new second
+            timeTickLastSecond = newTick;
+            ticksPerSecond = ticksThisSecond;
+            ticksThisSecond = 0;
+        }
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         ly = -gamepad1.left_stick_y;
@@ -123,30 +143,15 @@ public class DemoBotTeleopTank extends OpMode{
 
         rawLight = odsSensor.getRawLightDetected();
 
-        // Use gamepad left & right Bumpers to open and close the claw
-//        if (gamepad1.right_bumper)
-//            clawOffset += CLAW_SPEED;
-//        else if (gamepad1.left_bumper)
-//            clawOffset -= CLAW_SPEED;
+        telemetry.addData("left  motor,joystick",  "%.2f, %.2f", left, ly);
+        telemetry.addData("right motor,joystick", "%.2f, %.2f", right, ry);
 
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-//        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-//        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-//        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
+        telemetry.addData("loop ms", newTick - timeTick);
+        telemetry.addData("loops/sec", ticksPerSecond);
+        timeTick = newTick;
 
-        // Use gamepad buttons to move the arm up (Y) and down (A)
-//        if (gamepad1.y)
-//            robot.armMotor.setPower(robot.ARM_UP_POWER);
-//        else if (gamepad1.a)
-//            robot.armMotor.setPower(robot.ARM_DOWN_POWER);
-//        else
-//            robot.armMotor.setPower(0.0);
-
-        // Send telemetry message to signify robot running;
-        //telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("left",  "%.2f, %.2f", left, ly);
-        telemetry.addData("right", "%.2f, %.2f", right, ry);
         telemetry.addData("rawLight", "%.2f", rawLight);
+
         if (touchSensor.isPressed())
             telemetry.addData("Touch", "Is Pressed");
         else
@@ -159,13 +164,39 @@ public class DemoBotTeleopTank extends OpMode{
      */
     @Override
     public void stop() {
+        timeTick = 0;
     }
 
+    // scale joystick so small joystick values have even smaller motor values
+    // anything above 0.5 is close to full motor power
     private double scalePower(double p) {
-        if (p >= 0) {
-            return (p * p);
+        double newP;
+        double sign = (p < 0) ? -1 : 1;
+
+        if (Math.abs(p) < 0.05) {
+            newP = 0;
         }
-        else return (-p * p);
+        else if(Math.abs(p) < 0.25) {
+            newP = 0.1;
+        }
+        else if(Math.abs(p) < 0.4) {
+            newP = 0.15;
+        }
+        else if(Math.abs(p) < 0.5) {
+            newP = 0.2;
+        }
+        else if(Math.abs(p) < 0.6) {
+            newP = 0.3;
+        }
+        else if(Math.abs(p) < 0.8) {
+            newP = 0.4;
+        }
+        else if(Math.abs(p) < 0.9) {
+            newP = 0.5;
+        }
+        else newP = 1.0;
+
+        return newP * sign;
     }
 
 }

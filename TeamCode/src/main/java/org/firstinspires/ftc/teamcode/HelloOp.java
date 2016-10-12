@@ -21,7 +21,7 @@ public class HelloOp extends OpMode {
     }
 
     /*
-    * Code to run when the op mode is first enabled goes here
+    * Code to run when the "init" button is pressed, can be called repeatedly
     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init()
     */
     @Override
@@ -30,7 +30,7 @@ public class HelloOp extends OpMode {
     }
 
     /*
-    * Code to run when the op mode is first enabled goes here
+    * Code to run when the "play" button is pressed
     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
     */
     @Override

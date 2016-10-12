@@ -31,55 +31,65 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.IrSeekerSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 /*
  * This is an example LinearOpMode that shows how to use
- * the Modern Robotics ITR Seeker
- *
- * The op mode assumes that the IR Seeker
- * is configured with a name of "ir seeker".
- *
- * Set the switch on the Modern Robotics IR beacon to 1200 at 180.  <br>
- * Turn on the IR beacon.
- * Make sure the side of the beacon with the LED on is facing the robot. <br>
+ * a Modern Robotics Optical Distance Sensor
+ * It assumes that the ODS sensor is configured with a name of "ods sensor".
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name = "DemoBot: MR IR Seeker", group = "DemoBot")
-public class DemoBotSensorMRIrSeeker extends LinearOpMode {
+@Autonomous(name = "DemoBot: Auto ODS line follower", group = "DemoBot")
+public class DemoBotAutoMROpticalDistance extends LinearOpMode {
 
+  OpticalDistanceSensor odsSensor;  // Hardware Device Object
   @Override
   public void runOpMode() throws InterruptedException {
 
-    IrSeekerSensor irSeeker;    // Hardware Device Object
+    MyHardwarePushbot robot       = new MyHardwarePushbot(); // use the class created to define a Pushbot's hardware
 
-    // get a reference to our GyroSensor object.
-    irSeeker = hardwareMap.irSeekerSensor.get("ir_seeker");
+    // get a reference to our Light Sensor object.
+    odsSensor = hardwareMap.opticalDistanceSensor.get("ods sensor");
+    double rawLight;
+
+    double left; //motor power levels
+    double right;
+
+    robot.init(hardwareMap);
 
     // wait for the start button to be pressed.
     waitForStart();
 
-    while (opModeIsActive())  {
+    // while the op mode is active, loop and read the light levels.
+    // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+    while (opModeIsActive()) {
 
-      // Ensure we have a IR signal
-      if (irSeeker.signalDetected())
-      {
-        // Display angle and strength
-        telemetry.addData("Angle",    irSeeker.getAngle());
-        telemetry.addData("Strength", irSeeker.getStrength());
+      rawLight = odsSensor.getRawLightDetected();
+
+      if (rawLight < 0.01) { //black found, stop
+        left = 0; right = 0;
       }
-      else
-      {
-        // Display loss of signal
-        telemetry.addData("Seeker", "Signal Lost");
+      else if (rawLight > 0.5) { //white found, turn right
+        left = 0.09; right = 0.035;
+      }
+      else {
+        left = 0.035; right = 0.09; // floor found, turn left
       }
 
+      robot.leftMotor.setPower(left);
+      robot.rightMotor.setPower(right);
+
+      // send the info back to driver station using telemetry function.
+      telemetry.addData("Raw",    rawLight);
+      telemetry.addData("Left Motor", left);
+      telemetry.addData("RightMotor", right);
       telemetry.update();
+
       idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
     }
   }
