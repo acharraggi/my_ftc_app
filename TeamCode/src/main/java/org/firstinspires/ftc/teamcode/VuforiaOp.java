@@ -20,6 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by mikes on 2016-10-04.
+ * OpMode to display one or more FTC targets with an angle & distance from the photo to the target.
+ * It should be the angle needed to turn the robot such that the phone camera is "pointing"
+ * at the centre of the target.
  */
 
 @Autonomous(name = "Demo: VuforiaOp", group = "Demo")
@@ -65,12 +68,14 @@ public class VuforiaOp extends LinearOpMode {
                        and is above the floor,
                        then the orientation is (0,0,0) but the translation will contain an offset from the centre of the target,
                        in both the vertical axis and in the other axis.
-                       It's that offset that can be used to calculation the angle from the phone to the target.
+                       It's that offset that can be used to calculate the angle from the phone to the target.
                      */
 
                     double angle = Math.atan2(translation.get(2), translation.get(0)); // in radians
                     double degreesToTurn = Math.toDegrees(angle) + 90;                 // adjust for vertical orientation of phone
                     telemetry.addData(beacon.getName() + "-Degrees", degreesToTurn);
+                    double sideC = Math.sqrt(translation.get(2)*translation.get(2) + translation.get(0)*translation.get(0));  // Pythagoras calc of hypotenuse
+                    telemetry.addData(beacon.getName() + "-Distance", sideC);
 
                     /*     ConceptVuforiaNavigation
                            <li>If you want to break open the black box of a transformation matrix to understand
