@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
@@ -18,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  * see: http://developer.android.com/reference/android/hardware/SensorManager.html#remapCoordinateSystem(float[], int, int, float[])
  */
 @Autonomous(name = "DemoBotAutoSquare1", group = "DemoBot")
+@Disabled    // not finished
 public class DemoBotAutoSquare1 extends OpMode implements SensorEventListener {
 
     private SensorManager mSensorManager;

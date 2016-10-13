@@ -6,13 +6,8 @@ import com.vuforia.HINT;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
@@ -20,15 +15,19 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * Created by mikes on 2016-10-04.
- * OpMode to display one or more FTC targets with an angle & distance from the photo to the target.
- * It should be the angle needed to turn the robot such that the phone camera is "pointing"
- * at the centre of the target.
+ * OpMode to find the Gears target and drive towards it in autonomous.
+ * stop when distance < 400mm.
+ * Note: seems to require the bot to be within about 5 feet, any further and it can't find the target
  */
 
-@Autonomous(name = "Demo: VuforiaOp", group = "Demo")
-public class VuforiaOp extends LinearOpMode {
+@Autonomous(name = "DemoBot: Gears", group = "DemoBot")
+public class DemoBotAutoGears extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        MyHardwarePushbot robot       = new MyHardwarePushbot(); // use the class created to define a Pushbot's hardware
+        double left  = 0;
+        double right = 0;
+
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         params.vuforiaLicenseKey = "Ad6yHYT/////AAAAGdvmcs1KfECKpMTU2qCaOVQWM3OYYVJAzmnAt7Fbwl6WshFiYXMaWNBqT5dkWPelfReDyziet598boIocDwk8MsPCsMAxNZoFyGdhSvPJlHmiMTINmiMs+1jk0r0YhlVwjhAV00F80rqdD1TgDJpadpnP0gASiVznlCEETId3LbJLccRaxt8vqkvjXI1dWSl93/0+Y7rzm1TxMVehZhbxoc5WENnnKHWmeXOHia0l5xqWsuJ8a9zprqCLGr6/Ii9QLEUmMXz9XeoG04bqqozmDO6bVPVMQwZHCfwq7ogJaH8D75wuMdlhwKGEdT7PEQ3y2yb3Dw9AS6NKG8f0iMXI+X5h+6MylxQuiyv8Bu8++Wa";
@@ -43,13 +42,16 @@ public class VuforiaOp extends LinearOpMode {
         beacons.get(2).setName("Lego");
         beacons.get(3).setName("Gears");
 
+        VuforiaTrackable beacon = beacons.get(3);   // gears
+        robot.init(hardwareMap);
+
         waitForStart();
 
         beacons.activate();  // start tracking beacons
 
         while(opModeIsActive()) {
-            for(VuforiaTrackable beacon : beacons) {
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beacon.getListener()).getPose();
+
+                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beacon.getListener()).getPose();  // get gears target position
 
                 if(pose != null) {
                     if (((VuforiaTrackableDefaultListener) beacon.getListener()).isVisible()) {
@@ -74,20 +76,25 @@ public class VuforiaOp extends LinearOpMode {
                     double angle = Math.atan2(translation.get(2), translation.get(0)); // in radians
                     double degreesToTurn = Math.toDegrees(angle) + 90;                 // adjust for vertical orientation of phone
                     telemetry.addData(beacon.getName() + "-Degrees", degreesToTurn);
-                    double sideC = Math.sqrt(translation.get(2)*translation.get(2) + translation.get(0)*translation.get(0));  // Pythagoras calc of hypotenuse
-                    telemetry.addData(beacon.getName() + "-Distance", sideC);
+                    double distance = Math.sqrt(translation.get(2)*translation.get(2) + translation.get(0)*translation.get(0));  // Pythagoras calc of hypotenuse
+                    telemetry.addData(beacon.getName() + "-Distance", distance);
 
-                    /*     ConceptVuforiaNavigation
-                           <li>If you want to break open the black box of a transformation matrix to understand
-                            *     what it's doing inside, use {@link MatrixF#getTranslation()} to fetch how much the
-                            *     transform will move you in x, y, and z, and use {@link Orientation#getOrientation(MatrixF,
-                            *     AxesReference, AxesOrder, AngleUnit)} to determine the rotational motion that the transform
-                           will impart. See {@link #format(OpenGLMatrix)} below for an example.</li> */
-//                    Orientation o = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-//                    telemetry.addData("orient", o);  // same numbers as format(pose)
-//                    telemetry.addData("orient-1,2,3", o.firstAngle+","+o.secondAngle+","+o.thirdAngle);  // same numbers as format(pose)
+                    if(distance < 400) {
+                        left = 0; right = 0;
+                    }
+                    else if (degreesToTurn > 10) {  //turn right
+                        left = 0.2; right = 0.1;
+                    }
+                    else if (degreesToTurn < -10) { ///turn left
+                        left = 0.1; right = 0.2;
+                    }
+                    else {  // go straight
+                        left = 0.2; right = 0.2;
+                    }
+                    robot.leftMotor.setPower(left);
+                    robot.rightMotor.setPower(right);
                 }
-            }
+
             telemetry.update();
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
