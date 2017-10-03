@@ -32,15 +32,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -58,68 +52,37 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="DemoBot: Tank Drive", group="DemoBot")
-public class DemoBotTeleopTank extends OpMode{
+@TeleOp(name="Testbot: drive and lift", group="DemoBot")
+public class Testbot extends OpMode{
 
     /* Declare OpMode members. */
-    MyHardwarePushbot robot       = new MyHardwarePushbot(); // use the class created to define a Pushbot's hardware
+    public DcMotor leftMotor   = null;
+    public DcMotor  rightMotor  = null;
+    public DcMotor  liftMotor  = null;
                                                          // could also use HardwarePushbotMatrix class.
-    double          clawOffset  = 0.0 ;                  // Servo mid position
-    final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
-//    OpticalDistanceSensor odsSensor;  // Hardware Device Object
-//    TouchSensor touchSensor;  // Hardware Device Object
-
-    private long timeTick;              // last timeTick
-    private long timeTickLastSecond;    // timeTick of last second
-    private int  ticksPerSecond;        // number of ticks/sec
-    private int  ticksThisSecond;       // ticks so far this second
-
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
-         */
-        robot.init(hardwareMap);
+        leftMotor   = hardwareMap.dcMotor.get("drive right");
+        rightMotor  = hardwareMap.dcMotor.get("drive left");
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
-//        odsSensor = hardwareMap.opticalDistanceSensor.get("ods sensor");
-//        touchSensor = hardwareMap.touchSensor.get("touch sensor");
-
-        timeTick = 0;
-        timeTickLastSecond = 0;
-        ticksPerSecond = 0;
-        ticksThisSecond = 0;
-
-        robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.servo2.setPower(MyHardwarePushbot.SERVO2_STOP);
+        liftMotor  = hardwareMap.dcMotor.get("Slide");
+        //liftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
         updateTelemetry(telemetry);
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-//    @Override
-//    public void init_loop() {
-//        timeTick = 0;
-//    }
 
     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
     public void start() {
-        timeTick = System.currentTimeMillis();
-        timeTickLastSecond = timeTick;
-        ticksPerSecond = 0;
-        ticksThisSecond = 0;
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /*
@@ -130,57 +93,33 @@ public class DemoBotTeleopTank extends OpMode{
         double left;
         double right;
         double ly,ry;
-        double rawLight;
+        double pop;
 
-        long newTick = System.currentTimeMillis();
-        ticksThisSecond = ticksThisSecond + 1;
-        if(newTick - timeTickLastSecond > 1000) {  // we've started a new second
-            timeTickLastSecond = newTick;
-            ticksPerSecond = ticksThisSecond;
-            ticksThisSecond = 0;
-        }
-
-        // Run wheels in tank mode
-        ly = -gamepad1.left_stick_y;
-        ry = -gamepad1.right_stick_y;
+        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+        ly = gamepad1.left_stick_y;
+        ry = gamepad1.right_stick_y;
         left = scalePower(ly);
         right = scalePower(ry);
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
-
-        if(gamepad1.a) {
-            robot.servo1.setPosition(1);
-            telemetry.addData("Arm", "up");
-        }
-        else if (gamepad1.b) {
-            robot.servo1.setPosition(0);
-            telemetry.addData("Arm", "down");
-        }
-        if(gamepad1.x) {
-            robot.servo2.setPower(-1);
-        }
-        if(gamepad1.y) {
-            robot.servo2.setPower(1);
-        }
-        if(gamepad1.right_bumper) {
-            robot.servo2.setPower(MyHardwarePushbot.SERVO2_STOP);
-        }
-
-        rawLight = robot.odsSensor.getRawLightDetected();
+        leftMotor.setPower(left);
+        rightMotor.setPower(right);
 
         telemetry.addData("left  motor,joystick",  "%.2f, %.2f", left, ly);
         telemetry.addData("right motor,joystick", "%.2f, %.2f", right, ry);
 
-        telemetry.addData("loop ms", newTick - timeTick);
-        telemetry.addData("loops/sec", ticksPerSecond);
-        timeTick = newTick;
+        if(gamepad1.right_bumper) { // slide up
+            liftMotor.setPower(0.5);
+            telemetry.addData("Slide", "going up");
 
-        telemetry.addData("rawLight", "%.2f", rawLight);
+        }
+        else if (gamepad1.right_trigger > 0.5) { // slide down
+            liftMotor.setPower(-0.2);
+            telemetry.addData("Slide", "going down");
+        }
+        else {
+            liftMotor.setPower(0);
+            telemetry.addData("Slide", "stay put");
+        }
 
-        if (robot.touchSensor.isPressed())
-            telemetry.addData("Touch", "Is Pressed");
-        else
-            telemetry.addData("Touch", "Is Not Pressed");
         updateTelemetry(telemetry);
     }
 
@@ -189,10 +128,7 @@ public class DemoBotTeleopTank extends OpMode{
      */
     @Override
     public void stop() {
-        robot.servo2.setPower(MyHardwarePushbot.SERVO2_STOP);
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
-        timeTick = 0;
+
     }
 
     // scale joystick so small joystick values have even smaller motor values

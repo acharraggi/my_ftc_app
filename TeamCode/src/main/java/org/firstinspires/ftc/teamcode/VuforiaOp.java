@@ -6,7 +6,6 @@ import com.vuforia.HINT;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -29,10 +28,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class VuforiaOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+        VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);  // robot controller screen
         params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         params.vuforiaLicenseKey = "Ad6yHYT/////AAAAGdvmcs1KfECKpMTU2qCaOVQWM3OYYVJAzmnAt7Fbwl6WshFiYXMaWNBqT5dkWPelfReDyziet598boIocDwk8MsPCsMAxNZoFyGdhSvPJlHmiMTINmiMs+1jk0r0YhlVwjhAV00F80rqdD1TgDJpadpnP0gASiVznlCEETId3LbJLccRaxt8vqkvjXI1dWSl93/0+Y7rzm1TxMVehZhbxoc5WENnnKHWmeXOHia0l5xqWsuJ8a9zprqCLGr6/Ii9QLEUmMXz9XeoG04bqqozmDO6bVPVMQwZHCfwq7ogJaH8D75wuMdlhwKGEdT7PEQ3y2yb3Dw9AS6NKG8f0iMXI+X5h+6MylxQuiyv8Bu8++Wa";
-        params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
+        params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;  // display axes on the target when found
+        params.useExtendedTracking = false;    // don't track target when it's out of camera view. Should make isVisible work now.
 
         VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(params);
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);   // four targets on the field
@@ -51,17 +51,21 @@ public class VuforiaOp extends LinearOpMode {
             for(VuforiaTrackable beacon : beacons) {
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beacon.getListener()).getPose();
 
-                if(pose != null) {
-                    if (((VuforiaTrackableDefaultListener) beacon.getListener()).isVisible()) {
-                        telemetry.addData(beacon.getName() + "-visible", "Yes");
-                    } else {
-                        telemetry.addData(beacon.getName() + "-visible", "No");  // does not seem to be invokved once target found once.
-                    }
+                if (((VuforiaTrackableDefaultListener) beacon.getListener()).isVisible()) {
+                    telemetry.addData(beacon.getName() + "-visible", "Yes");
+                } else {
+                    telemetry.addData(beacon.getName() + "-visible", "No");  // does not seem to be invokved once target found once.
+                }
+
+                if(pose == null) {
+                    telemetry.addData(beacon.getName() +"-Pose", "is null");
+                }
+                else {
                     VectorF translation = pose.getTranslation();
                     //telemetry.addData(beacon.getName() + "-Translation", translation); // format(pose) shows both orientation and translation
                     //telemetry.addData(beacon.getName()+"-vector", pose.toVector());    // dump entire matrix
 
-                    telemetry.addData("Pose", format(pose));
+                    telemetry.addData(beacon.getName() +"-Pose", format(pose));
                     /* based on observation of pose, it represents the position and orientation of the target image.
                        The position is in milimeters, the orientation is of the target, not the phone.
                        eg. if the phone and target are both parallel to the floor, but the phone is offset towards one edge of the target

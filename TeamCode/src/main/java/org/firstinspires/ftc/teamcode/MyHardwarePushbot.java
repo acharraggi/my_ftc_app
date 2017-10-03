@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -27,13 +30,17 @@ public class MyHardwarePushbot
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
-    public DcMotor  armMotor    = null;
-    public Servo    leftClaw    = null;
-    public Servo    rightClaw   = null;
 
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
+    public Servo    servo1    = null;
+    public CRServo   servo2   = null;
+
+    OpticalDistanceSensor odsSensor;  // Hardware Device Object
+    TouchSensor touchSensor;  // Hardware Device Object
+
+
+    public static final double ARM_UP    =  0.8 ;
+    public static final double ARM_DOWN  = 0.2 ;
+    public static final double SERVO2_STOP = 0.05;  // servo2 seems to need a non-zero value to remain motionless
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -52,26 +59,27 @@ public class MyHardwarePushbot
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("left_drive");
         rightMotor  = hwMap.dcMotor.get("right_drive");
-//        armMotor    = hwMap.dcMotor.get("left_arm");
-        leftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        //leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 //        armMotor.setPower(0);
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //odsSensor = hwMap.opticalDistanceSensor.get("ods sensor");
+       // touchSensor = hwMap.touchSensor.get("touch sensor");
 
         // Define and initialize ALL installed servos.
-//        leftClaw = hwMap.servo.get("left_hand");
-//        rightClaw = hwMap.servo.get("right_hand");
-//        leftClaw.setPosition(MID_SERVO);
-//        rightClaw.setPosition(MID_SERVO);
+        //servo1 = hwMap.servo.get("servo1");
+        //servo2 = hwMap.crservo.get("servo2");
+
+        //servo1.setPosition(0);
+        //servo2.setPower(SERVO2_STOP);
     }
 
     /***
